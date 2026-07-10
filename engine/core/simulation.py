@@ -1,24 +1,13 @@
-from .clock import Clock
-
-from engine.events.bus import EventBus
-from engine.events.time_events import TimeAdvanced
+from engine.systems.system_manager import SystemManager
 
 
 class Simulation:
+    """
+    Loop principal da simulação.
+    """
 
-    def __init__(self, event_bus: EventBus):
+    def __init__(self, system_manager: SystemManager) -> None:
+        self.system_manager = system_manager
 
-        self.clock = Clock()
-        self.event_bus = event_bus
-
-    def update(self):
-
-        self.clock.tick()
-
-        event = TimeAdvanced(
-            day=self.clock.day,
-            hour=self.clock.hour,
-            minute=self.clock.minute
-        )
-
-        self.event_bus.publish(event)
+    def update(self) -> None:
+        self.system_manager.update()

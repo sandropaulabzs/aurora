@@ -1,0 +1,51 @@
+Metadata-Version: 2.4
+Name: aurora-seed-engine
+Version: 0.0.1
+Summary: Aurora ecological simulation project powered by the SEED Engine.
+Requires-Python: >=3.14
+Description-Content-Type: text/markdown
+Provides-Extra: dev
+Requires-Dist: pytest<10.0,>=9.0; extra == "dev"
+
+\# Aurora
+
+
+
+Aurora é uma engine de simulação ecológica em desenvolvimento.
+
+
+
+\## Engine
+
+
+
+SEED Engine
+
+
+
+\## Linguagem
+
+
+
+Python 3.14
+
+
+
+\## Estado
+
+
+
+Em desenvolvimento.
+
+
+
+Primeiro commit:
+
+Foundation
+
+
+
+Segundo commit:
+
+Event Bus
+
