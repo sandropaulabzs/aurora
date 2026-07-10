@@ -1,36 +1,66 @@
 from engine.terrain.generator import TerrainGenerator
+from engine.terrain.planet_dna_factory import PlanetDNAFactory
 from engine.terrain.world_map import WorldMap
+from engine.terrain.world_seed import WorldSeed
 
 
-def test_terrain_generator_creates_vertical_gradient() -> None:
-    world_map = WorldMap(width=4, height=4)
+def test_terrain_generator_is_deterministic_for_same_seed() -> None:
+    seed = WorldSeed(12345)
+    dna = PlanetDNAFactory().create(seed)
+
+    world_map_a = WorldMap(width=8, height=8)
+    world_map_b = WorldMap(width=8, height=8)
+
     generator = TerrainGenerator()
 
-    generator.generate(world_map)
+    generator.generate(
+        world_map=world_map_a,
+        seed=seed,
+        dna=dna,
+    )
 
-    top_left = world_map.get_tile(0, 0)
-    middle_left = world_map.get_tile(0, 2)
-    bottom_left = world_map.get_tile(0, 3)
+    generator.generate(
+        world_map=world_map_b,
+        seed=seed,
+        dna=dna,
+    )
 
-    assert top_left is not None
-    assert middle_left is not None
-    assert bottom_left is not None
+    altitudes_a = [
+        world_map_a.get_tile(x, y).altitude
+        for y in range(world_map_a.height)
+        for x in range(world_map_a.width)
+        if world_map_a.get_tile(x, y) is not None
+    ]
 
-    assert top_left.altitude == 0.0
-    assert middle_left.altitude == 2 / 3
-    assert bottom_left.altitude == 1.0
+    altitudes_b = [
+        world_map_b.get_tile(x, y).altitude
+        for y in range(world_map_b.height)
+        for x in range(world_map_b.width)
+        if world_map_b.get_tile(x, y) is not None
+    ]
+
+    assert altitudes_a == altitudes_b
 
 
-def test_terrain_generator_applies_same_altitude_across_each_row() -> None:
-    world_map = WorldMap(width=5, height=3)
+def test_terrain_generator_creates_altitude_variation() -> None:
+    seed = WorldSeed(67890)
+    dna = PlanetDNAFactory().create(seed)
+
+    world_map = WorldMap(width=16, height=16)
     generator = TerrainGenerator()
 
-    generator.generate(world_map)
+    generator.generate(
+        world_map=world_map,
+        seed=seed,
+        dna=dna,
+    )
 
-    row_altitudes = {
-        world_map.get_tile(x, 1).altitude
+    altitudes = {
+        world_map.get_tile(x, y).altitude
+        for y in range(world_map.height)
         for x in range(world_map.width)
-        if world_map.get_tile(x, 1) is not None
+        if world_map.get_tile(x, y) is not None
     }
 
-    assert row_altitudes == {0.5}
+    assert len(altitudes) > 1
+    assert all(0.0 <= altitude <= 1.0 for altitude in altitudes)

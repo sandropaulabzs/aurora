@@ -1,4 +1,5 @@
 from engine.terrain.generator import TerrainGenerator
+from engine.terrain.planet_dna_factory import PlanetDNAFactory
 from engine.terrain.world_map import WorldMap
 from engine.terrain.world_seed import WorldSeed
 
@@ -16,7 +17,10 @@ class World:
         seed: WorldSeed | None = None,
     ) -> None:
         self.name = name
+
         self.seed = seed if seed is not None else WorldSeed.random()
+
+        self.dna = PlanetDNAFactory().create(self.seed)
 
         self.map = WorldMap(
             width=width,
@@ -26,7 +30,12 @@ class World:
         self.terrain_generator = TerrainGenerator()
 
     def initialize(self) -> None:
-        self.terrain_generator.generate(self.map)
+
+        self.terrain_generator.generate(
+            world_map=self.map,
+            seed=self.seed,
+            dna=self.dna,
+        )
 
         print(
             f"World '{self.name}' initialized "
