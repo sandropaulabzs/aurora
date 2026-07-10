@@ -1,0 +1,47 @@
+from engine.version import PROJECT_NAME, ENGINE_NAME, VERSION
+
+from engine.events.bus import EventBus
+from engine.core.world import World
+from engine.core.simulation import Simulation
+from engine.debug.debug_console import DebugConsole
+from engine.events.time_events import TimeAdvanced
+
+
+class SeedEngine:
+
+    def __init__(self):
+
+        # Infraestrutura
+        self.event_bus = EventBus()
+
+        # Mundo
+        self.world = World()
+
+        # Sistemas
+        self.simulation = Simulation(self.event_bus)
+
+        # Ferramentas
+        self.debug_console = DebugConsole()
+
+        # Registrar assinantes
+        self.event_bus.subscribe(
+            TimeAdvanced,
+            self.debug_console.on_time_advanced
+        )
+
+    def start(self):
+
+        print("=" * 40)
+        print(PROJECT_NAME)
+        print(ENGINE_NAME)
+        print(VERSION)
+        print("=" * 40)
+
+        self.world.initialize()
+
+        print()
+        print("Simulation Started")
+        print()
+
+        for _ in range(20):
+            self.simulation.update()
