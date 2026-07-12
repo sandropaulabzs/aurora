@@ -1,3 +1,4 @@
+from engine.atmosphere.solar_radiation import SolarRadiation
 from engine.terrain.generator import TerrainGenerator
 from engine.terrain.planet_dna_factory import PlanetDNAFactory
 from engine.terrain.world_map import WorldMap
@@ -28,14 +29,16 @@ class World:
         )
 
         self.terrain_generator = TerrainGenerator()
+        self.solar_radiation = SolarRadiation()
 
     def initialize(self) -> None:
-
         self.terrain_generator.generate(
             world_map=self.map,
             seed=self.seed,
             dna=self.dna,
         )
+
+        self.solar_radiation.apply(self.map)
 
         print(
             f"World '{self.name}' initialized "

@@ -3,11 +3,11 @@ from engine.version import ENGINE_NAME, PROJECT_NAME, VERSION
 from engine.core.simulation import Simulation
 from engine.core.world import World
 from engine.debug.debug_console import DebugConsole
-from engine.debug.world_preview import WorldPreview
 from engine.events.bus import EventBus
 from engine.events.time_events import TimeAdvanced
 from engine.systems.clock_system import ClockSystem
 from engine.systems.system_manager import SystemManager
+from engine.visualization.observatory import AuroraObservatory
 
 
 class SeedEngine:
@@ -25,9 +25,9 @@ class SeedEngine:
         self.clock_system = ClockSystem(self.event_bus)
         self.system_manager.register(self.clock_system)
 
-        # Ferramentas de depuração
+        # Ferramentas
         self.debug_console = DebugConsole()
-        self.world_preview = WorldPreview()
+        self.observatory = AuroraObservatory()
 
         # Assinantes
         self.event_bus.subscribe(
@@ -48,7 +48,9 @@ class SeedEngine:
 
         self.world.initialize()
 
-        self.world_preview.show(self.world.map)
+        print()
+        print(self.observatory.render(self.world.map))
+        print()
 
         print("Simulation Started")
         print()
