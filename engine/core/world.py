@@ -1,8 +1,8 @@
 from engine.atmosphere.atmosphere import Atmosphere
-from engine.atmosphere.solar_radiation import SolarRadiation
-from engine.atmosphere.temperature import TemperatureModel
 from engine.terrain.generator import TerrainGenerator
+from engine.terrain.ocean_initializer import OceanInitializer
 from engine.terrain.planet_dna_factory import PlanetDNAFactory
+from engine.terrain.sea_level import SeaLevel
 from engine.terrain.world_map import WorldMap
 from engine.terrain.world_seed import WorldSeed
 
@@ -24,6 +24,10 @@ class World:
 
         self.dna = PlanetDNAFactory().create(self.seed)
 
+        self.sea_level = SeaLevel(
+            self.dna.water_level
+        )
+
         self.atmosphere = Atmosphere(
             density=0.75,
             heat_capacity=0.60,
@@ -36,22 +40,25 @@ class World:
             height=height,
         )
 
+        # Genesis systems
         self.terrain_generator = TerrainGenerator()
-        self.solar_radiation = SolarRadiation()
-        self.temperature_model = TemperatureModel()
+        self.ocean_initializer = OceanInitializer()
 
     def initialize(self) -> None:
+        """
+        Executes only the processes that define
+        the initial formation of the world.
+        """
+
         self.terrain_generator.generate(
             world_map=self.map,
             seed=self.seed,
             dna=self.dna,
         )
 
-        self.solar_radiation.apply(self.map)
-
-        self.temperature_model.apply(
+        self.ocean_initializer.apply(
             world_map=self.map,
-            atmosphere=self.atmosphere,
+            sea_level=self.sea_level,
         )
 
         print(
@@ -60,3 +67,4 @@ class World:
         )
 
         print(f"World Seed: {self.seed.value}")
+        print(f"Sea Level: {self.sea_level.value:.3f}")

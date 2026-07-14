@@ -7,6 +7,7 @@ from engine.events.bus import EventBus
 from engine.events.time_events import TimeAdvanced
 from engine.systems.clock_system import ClockSystem
 from engine.systems.system_manager import SystemManager
+from engine.systems.world_dynamics_system import WorldDynamicsSystem
 from engine.visualization.observatory import AuroraObservatory
 
 
@@ -23,13 +24,16 @@ class SeedEngine:
 
         # Sistemas
         self.clock_system = ClockSystem(self.event_bus)
+        self.world_dynamics = WorldDynamicsSystem(self.world)
+
         self.system_manager.register(self.clock_system)
+        self.system_manager.register(self.world_dynamics)
 
         # Ferramentas
         self.debug_console = DebugConsole()
         self.observatory = AuroraObservatory()
 
-        # Assinantes
+        # Eventos
         self.event_bus.subscribe(
             TimeAdvanced,
             self.debug_console.on_time_advanced,
@@ -46,14 +50,18 @@ class SeedEngine:
         print(VERSION)
         print("=" * 40)
 
+        # Gênese
         self.world.initialize()
 
         print()
-        print(self.observatory.render(self.world.map))
-        print()
-
         print("Simulation Started")
         print()
 
+        # A natureza evolui durante 20 ciclos.
         for _ in range(20):
             self.simulation.update()
+
+        # O Observatório revela o estado resultante.
+        print()
+        print(self.observatory.render(self.world.map))
+        print()
