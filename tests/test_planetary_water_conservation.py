@@ -13,11 +13,11 @@ def total_water(world: World) -> float:
     for row in world.map.tiles:
         for tile in row:
             total += tile.ground_moisture
+            total += tile.surface_water
             total += tile.atmospheric_moisture
             total += tile.cloud_water
 
     return total
-
 
 def test_planetary_water_is_conserved() -> None:
 

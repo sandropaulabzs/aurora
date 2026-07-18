@@ -1,9 +1,9 @@
 from engine.terrain.world_map import WorldMap
 
 
-class CloudWaterVisualizer:
+class SurfaceWaterVisualizer:
     """
-    Renders condensed cloud water in ASCII.
+    Renders surface water distribution in ASCII.
 
     Zero remains blank, while every positive value
     leaves at least a faint visible trace.
@@ -28,7 +28,7 @@ class CloudWaterVisualizer:
 
                 value = max(
                     0.0,
-                    min(tile.cloud_water, 1.0),
+                    min(tile.surface_water, 1.0),
                 )
 
                 if value == 0.0:

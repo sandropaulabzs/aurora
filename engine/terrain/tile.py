@@ -11,8 +11,14 @@ class Tile:
     y: int
 
     altitude: float = 0.0
+    is_ocean: bool = False
 
     ground_moisture: float = 0.0
+    soil_capacity: float = 1.0
+    surface_water: float = 0.0
+    infiltration: float = 0.0
+    runoff: float = 0.0
+    water_passage: float = 0.0
     evaporation: float = 0.0
 
     atmospheric_moisture: float = 0.0

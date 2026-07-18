@@ -3,7 +3,11 @@ from engine.terrain.world_map import WorldMap
 
 class PrecipitationModel:
     """
-    Transfers excess cloud water back to the ground.
+    Transfers excess cloud water back to the planetary surface.
+
+    Over land, precipitation becomes surface water.
+    Over ocean, precipitation returns directly to the
+    existing ocean-water reservoir.
 
     The precipitation field records how much water
     precipitated during the current update.
@@ -15,7 +19,6 @@ class PrecipitationModel:
     ) -> None:
         for row in world_map.tiles:
             for tile in row:
-                # Every update begins with no precipitation.
                 tile.precipitation = 0.0
 
                 excess = (
@@ -27,5 +30,10 @@ class PrecipitationModel:
                     continue
 
                 tile.cloud_water -= excess
-                tile.ground_moisture += excess
+
+                if tile.is_ocean:
+                    tile.ground_moisture += excess
+                else:
+                    tile.surface_water += excess
+
                 tile.precipitation = excess

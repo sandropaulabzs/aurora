@@ -1,11 +1,11 @@
 from engine.terrain.world_map import WorldMap
 
 
-class CloudWaterVisualizer:
+class RunoffVisualizer:
     """
-    Renders condensed cloud water in ASCII.
+    Renders surface runoff intensity in ASCII.
 
-    Zero remains blank, while every positive value
+    Zero remains blank. Every positive runoff value
     leaves at least a faint visible trace.
     """
 
@@ -28,7 +28,7 @@ class CloudWaterVisualizer:
 
                 value = max(
                     0.0,
-                    min(tile.cloud_water, 1.0),
+                    min(tile.runoff, 1.0),
                 )
 
                 if value == 0.0:
@@ -39,8 +39,12 @@ class CloudWaterVisualizer:
                         int(value * max_index),
                     )
 
-                row.append(self.SYMBOLS[index])
+                row.append(
+                    self.SYMBOLS[index]
+                )
 
-            lines.append("".join(row))
+            lines.append(
+                "".join(row)
+            )
 
         return "\n".join(lines)

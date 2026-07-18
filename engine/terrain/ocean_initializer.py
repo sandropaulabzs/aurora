@@ -5,8 +5,7 @@ from engine.terrain.world_map import WorldMap
 
 class OceanInitializer:
     """
-    Initializes the world's oceans by filling ocean tiles
-    with ground water.
+    Initializes the world's oceans.
     """
 
     def apply(
@@ -17,8 +16,10 @@ class OceanInitializer:
         for row in world_map.tiles:
             for tile in row:
 
-                if is_ocean(
+                tile.is_ocean = is_ocean(
                     tile,
                     sea_level,
-                ):
+                )
+
+                if tile.is_ocean:
                     tile.ground_moisture = 1.0

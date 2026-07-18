@@ -10,8 +10,14 @@ from engine.atmosphere.wind_field import WindField
 from engine.core.world import World
 from engine.hydrology.evaporation import EvaporationModel
 from engine.hydrology.evaporation_transfer import EvaporationTransfer
+from engine.hydrology.infiltration import InfiltrationModel
 from engine.hydrology.moisture_transport import MoistureTransport
 from engine.hydrology.precipitation import PrecipitationModel
+from engine.hydrology.runoff import RunoffModel
+from engine.hydrology.water_passage import WaterPassageModel
+from engine.hydrology.water_passage_decay import (
+    WaterPassageDecayModel,
+)
 from engine.systems.system import System
 
 
@@ -39,6 +45,13 @@ class WorldDynamicsSystem(System):
         self.moisture_transport = MoistureTransport()
         self.condensation_model = CondensationModel()
         self.precipitation_model = PrecipitationModel()
+        self.infiltration_model = InfiltrationModel()
+        self.runoff_model = RunoffModel()
+
+        self.water_passage_decay_model = (
+            WaterPassageDecayModel()
+        )
+        self.water_passage_model = WaterPassageModel()
 
     def update(self) -> None:
         self.solar_radiation.apply(
@@ -86,5 +99,21 @@ class WorldDynamicsSystem(System):
         )
 
         self.precipitation_model.apply(
+            self.world.map,
+        )
+
+        self.infiltration_model.apply(
+            self.world.map,
+        )
+
+        self.runoff_model.apply(
+            self.world.map,
+        )
+
+        self.water_passage_decay_model.apply(
+            self.world.map,
+        )
+
+        self.water_passage_model.apply(
             self.world.map,
         )
